@@ -1,6 +1,7 @@
 <?php
 
 include_once 'helpers/headers.php';
+include_once 'helpers/id_maker.php';
 
 global $Link;
 
@@ -32,9 +33,7 @@ header('Content-type: application/json');
 $Link = mysqli_connect("127.0.0.1", "php_project", "nikitausov", "php_project");
 
 if (!$Link) {
-    echo "Ошибка: Невозможно установить соединение с MySQL." . PHP_EOL;
-    echo "Код ошибки errno: " . mysqli_connect_errno() . PHP_EOL;
-    echo "Текст ошибки error: " . mysqli_connect_error() . PHP_EOL;
+    setHTTPStatus("500", "DB Connection error: " .mysqli_connect_error());
 }
 $url = isset($_GET['q']) ? $_GET['q'] : '';
 $url = rtrim($url, '/');
@@ -43,9 +42,9 @@ $urlList = explode('/', $url);
 $router = $urlList[0];
 $requestData = getData(getMethod());
 
-if (file_exists(realpath(dirname(__FILE__)) . '/routers/' . $router . '.php')) {
-    include_once 'routers/' . $router . '.php';
+if (file_exists(realpath(dirname(__FILE__)) . '/' . $urlList[0] . '/' . $urlList[1] . '/routers/' . $urlList[2] . '.php')) {
+    include_once $urlList[0] . '/' . $urlList[1] . '/routers/' . $urlList[2] . '.php';
     route(getMethod(), $urlList, $requestData);
 } else {
-    echo "NOPE 404";
+    setHTTPStatus("404", "There is no such endpoint as '/routers/" . $router);
 }

@@ -1,18 +1,5 @@
 <?php
 
-function uid() {
-    mt_srand((double)microtime()*1000000);
-    $token = mt_rand(1, mt_getrandmax());
-
-    $uid = uniqid(md5($token), true);
-    if($uid != false && $uid != '' && $uid != NULL) {
-        $out = sha1($uid);
-        return $out;
-    } else {
-        return false;
-    }
-}
-
 function route($method, $urlList, $requestData)
 {
     global $Link;
@@ -26,7 +13,7 @@ function route($method, $urlList, $requestData)
                 echo json_encode($user);
             }
             else {
-                echo "400: input data incorrect";
+                setHTTPStatus("400", "There is no such user with supplied token");
             }
             break;
         case 'POST':
@@ -41,20 +28,16 @@ function route($method, $urlList, $requestData)
                 $birthDate = $requestData->body->birthDate;
                 $gender = $requestData->body->gender;
                 $phoneNumber = $requestData->body->phoneNumber;
-                $id = uid();
+                $id = userId();
 
                 $userInsertResult = $Link->query("INSERT INTO user(id, fullName, birthDate, gender, address, email, phoneNumber, password) VALUES ('$id', '$fullName', '$birthDate', '$gender', '$address', '$email', '$phoneNumber', '$password')");
 
                 if(!$userInsertResult) {
-                    echo "Too bad";
-                }
-                else {
-                    echo "Success";
+                    setHTTPStatus("400", "DB error: $Link->error");
                 }
 
-                echo json_encode($requestData);
             } else {
-                echo "EXIST";
+                setHTTPStatus("409", "User with email '$email' already exists");
             }
 
             break;
