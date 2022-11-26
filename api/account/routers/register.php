@@ -35,6 +35,10 @@ function route($method, $urlList, $requestData)
                 if(!$userInsertResult) {
                     setHTTPStatus("400", "DB error: $Link->error");
                 }
+                else {
+                    $user = $Link->query("SELECT id, fullName, birthDate, gender, address, email, phoneNumber FROM user WHERE id = '$id'");
+                    echo json_encode(['token' => generateUserToken($user)]);
+                }
 
             } else {
                 setHTTPStatus("409", "User with email '$email' already exists");
