@@ -20,6 +20,9 @@ function setHTTPStatus($status = "200", $message = null)
         case "404":
             $status = "HTTP/1.0 Not Found";
             break;
+        case "409":
+            $status = "HTTP/1.0 Conflict";
+            break;
         case "500":
             $status = "HTTP/1.0 Internal Server Error";
             break;

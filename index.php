@@ -13,7 +13,6 @@ function getData($method)
     if ($method != "GET") {
         $data->body = json_decode(file_get_contents('php://input'));
     }
-
     $data->parameters = [];
     $dataGet = $_GET;
     foreach ($dataGet as $key => $value) {
@@ -42,9 +41,17 @@ $urlList = explode('/', $url);
 $router = $urlList[0];
 $requestData = getData(getMethod());
 
-if (file_exists(realpath(dirname(__FILE__)) . '/' . $urlList[0] . '/' . $urlList[1] . '/routers/' . $urlList[2] . '.php')) {
+if (file_exists(realpath(dirname(__FILE__)) . '/' . $urlList[0] . '/' . $urlList[1] . '/router.php')) {
+    include_once $urlList[0] . '/' . $urlList[1] . '/router.php';
+    route(getMethod(), $urlList, $requestData);
+}
+else {
+    setHTTPStatus("404", "Incorrect URL request");
+}
+
+/*if (file_exists(realpath(dirname(__FILE__)) . '/' . $urlList[0] . '/' . $urlList[1] . '/routers/' . $urlList[2] . '.php')) {
     include_once $urlList[0] . '/' . $urlList[1] . '/routers/' . $urlList[2] . '.php';
     route(getMethod(), $urlList, $requestData);
 } else {
     setHTTPStatus("404", "There is no such endpoint as '/routers/" . $router);
-}
+}*/
