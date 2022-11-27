@@ -1,57 +1,35 @@
 <?php
 
 include_once 'helpers/headers.php';
-include_once 'api/account/helpers/id_maker.php';
+include_once 'api/account/helpers/generators/id_generator.php';
+include_once 'api/account/helpers/generators/token_generator.php';
+include_once 'helpers/get_body_data.php';
+include_once 'helpers/get_request_method.php';
+include_once 'api/account/routers/register.php';
+include_once 'api/account/routers/login.php';
+include_once 'api/account/routers/logout.php';
+include_once 'api/account/helpers/validation/general_validation.php';
 
 global $Link;
-
-function getData($method)
-{
-
-    $data = new stdClass();
-
-    if ($method != "GET") {
-        $data->body = json_decode(file_get_contents('php://input'));
-    }
-    $data->parameters = [];
-    $dataGet = $_GET;
-    foreach ($dataGet as $key => $value) {
-        if ($key != "q") {
-            $data->parameters[$key] = $value;
-        }
-    }
-    return $data;
-}
-
-function getMethod()
-{
-    return $_SERVER['REQUEST_METHOD'];
-}
+global $Key;
 
 header('Content-type: application/json');
 $Link = mysqli_connect("127.0.0.1", "php_project", "nikitausov", "php_project");
+$Key = "blessRNG";
 
 if (!$Link) {
-    setHTTPStatus("500", "DB Connection error: " .mysqli_connect_error());
+    setHTTPStatus("500", "DB Connection error: " . mysqli_connect_error());
 }
-$url = isset($_GET['q']) ? $_GET['q'] : '';
+$url = $_GET['q'] ?? '';
 $url = rtrim($url, '/');
 $urlList = explode('/', $url);
 
 $router = $urlList[0];
-$requestData = getData(getMethod());
+$requestData = getBodyData(getRequestMethod());
 
 if (file_exists(realpath(dirname(__FILE__)) . '/' . $urlList[0] . '/' . $urlList[1] . '/router.php')) {
     include_once $urlList[0] . '/' . $urlList[1] . '/router.php';
-    route(getMethod(), $urlList, $requestData);
-}
-else {
+    route(getRequestMethod(), $urlList, $requestData);
+} else {
     setHTTPStatus("404", "Incorrect URL request");
 }
-
-/*if (file_exists(realpath(dirname(__FILE__)) . '/' . $urlList[0] . '/' . $urlList[1] . '/routers/' . $urlList[2] . '.php')) {
-    include_once $urlList[0] . '/' . $urlList[1] . '/routers/' . $urlList[2] . '.php';
-    route(getMethod(), $urlList, $requestData);
-} else {
-    setHTTPStatus("404", "There is no such endpoint as '/routers/" . $router);
-}*/

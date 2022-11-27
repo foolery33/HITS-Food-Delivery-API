@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @throws Exception
+ */
 function route($method, $urlList, $requestData) {
 
     global $Link;
@@ -7,12 +10,14 @@ function route($method, $urlList, $requestData) {
     switch ($urlList[2]) {
 
         case "register":
-            include_once "api/account/routers/register.php";
-            include_once "api/account/helpers/validation/general_validation.php";
             register($method, $requestData);
             break;
 
         case "login":
+            login($method, $requestData);
+            break;
+        case "logout":
+            logout($method, $urlList, $requestData);
             break;
         default:
             setHTTPStatus("404", "There is no such endpoint as api/account/" . $urlList[2]);

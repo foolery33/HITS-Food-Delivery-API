@@ -48,9 +48,10 @@
     }
 }*/
 
-function register($method, $requestData) {
+function register($method, $requestData)
+{
 
-    if($method == "POST") {
+    if ($method == "POST") {
         global $Link;
         $email = $requestData->body->email;
         $user = $Link->query("SELECT id FROM user WHERE email='$email'")->fetch_assoc();
@@ -66,30 +67,25 @@ function register($method, $requestData) {
 
             $registerResult = registerValidation($email, $phoneNumber, $requestData->body->password);
 
-            if($registerResult == "true") {
+            if ($registerResult == "true") {
                 $userInsertResult = $Link->query("INSERT INTO user(id, fullName, birthDate, gender, address, email, phoneNumber, password) VALUES ('$id', '$fullName', '$birthDate', '$gender', '$address', '$email', '$phoneNumber', '$password')");
 
-                if(!$userInsertResult) {
+                if (!$userInsertResult) {
                     setHTTPStatus("400", "DB error: $Link->error");
-                }
-                else {
+                } else {
                     $user = $Link->query("SELECT id, fullName, birthDate, gender, address, email, phoneNumber FROM user WHERE id = '$id'")->fetch_assoc();
-                    include_once "api/account/helpers/token_generator.php";
                     $token = generateUserToken($user);
                     echo json_encode(['token' => $token]);
                 }
-            }
-            else {
+            } else {
                 setHTTPStatus("400", $registerResult);
             }
 
         } else {
             setHTTPStatus("409", "User with email '$email' already exists");
         }
-    }
-
-    else {
-        setHTTPStatus("400", "You can only send POST requests to register");
+    } else {
+        setHTTPStatus("400", "You can only send POST requests to 'register'");
     }
 
 }

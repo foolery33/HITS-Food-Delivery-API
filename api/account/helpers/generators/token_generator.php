@@ -4,10 +4,11 @@ include_once "libs/vendor/firebase/php-jwt/src/BeforeValidException.php";
 include_once "libs/vendor/firebase/php-jwt/src/ExpiredException.php";
 include_once "libs/vendor/firebase/php-jwt/src/SignatureInvalidException.php";
 include_once "libs/vendor/firebase/php-jwt/src/JWT.php";
-use \Firebase\JWT\JWT;
+use Firebase\JWT\JWT;
 
 function generateUserToken($user) {
 
+    global $Key;
     // Показ сообщений об ошибках
     error_reporting(E_ALL);
 
@@ -15,7 +16,6 @@ function generateUserToken($user) {
     date_default_timezone_set("Europe/Moscow");
 
     // Переменные, используемые для JWT
-    $key = "blessRNG";
     $iss = "localhost";
     $aud = "localhost";
 
@@ -34,5 +34,5 @@ function generateUserToken($user) {
         )
     );
 
-    return JWT::encode($token, $key, 'HS256');
+    return JWT::encode($token, $Key, 'HS256');
 }
