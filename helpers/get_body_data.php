@@ -1,6 +1,6 @@
 <?php
 
-function getBodyData($method)
+function getBodyData($method): stdClass
 {
 
     $data = new stdClass();

@@ -6,7 +6,6 @@ require "libs/vendor/autoload.php";
 
 function isExpiredToken($token)
 {
-    $token = substr(getallheaders()['Authorization'], 7);
     if ($token) {
         global $Key;
         try {

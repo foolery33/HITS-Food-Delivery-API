@@ -16,10 +16,10 @@ function route($method, $urlList, $requestData) {
             login($method, $requestData);
             break;
         case "logout":
-            logout($method, $urlList, $requestData);
+            logout($method);
             break;
         case "profile":
-            profile($method, $urlList, $requestData);
+            profile($method, $requestData);
             break;
         default:
             setHTTPStatus("404", "There is no such endpoint as api/account/" . $urlList[2]);

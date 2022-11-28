@@ -2,10 +2,12 @@
 
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+
 require "libs/vendor/autoload.php";
 
-function profile($method, $requestData) {
-    if($method == "GET" || $method == "PUT") {
+function profile($method, $requestData)
+{
+    if ($method == "GET" || $method == "PUT") {
         global $Key;
         $token = substr(getallheaders()['Authorization'], 7);
         include_once 'helpers/check_token_expiration.php';
@@ -14,33 +16,31 @@ function profile($method, $requestData) {
             case false:
                 switch ($method) {
                     case "GET":
-                        $decoded = (array) JWT::decode($token, new Key($Key, 'HS256'));
+                        $decoded = (array)JWT::decode($token, new Key($Key, 'HS256'));
                         echo json_encode($decoded['data']);
                         break;
                     case "PUT":
                         global $Link;
                         $errors = [];
-                        $user = ((array) JWT::decode($token, new Key($Key, 'HS256')))['data'];
+                        $user = ((array)JWT::decode($token, new Key($Key, 'HS256')))['data'];
                         $userID = $user->id;
                         $newFullName = $requestData->body->fullName;
-                        if(!$newFullName) {
+                        if (!strlen($newFullName)) {
                             $errors['FullName'] = ["The FullName field is required"];
                         }
                         $newBirthDate = empty($requestData->body->birthDate) ? $user->birthDate : $requestData->body->birthDate;
                         $newGender = empty($requestData->body->gender) ? $user->gender : $requestData->body->gender;
                         $newAddress = empty($requestData->body->address) ? $user->address : $requestData->body->address;
                         $newPhoneNumber = empty($requestData->body->phoneNumber) ? $user->phoneNumber : $requestData->body->phoneNumber;
-                        if(empty($errors)) {
+                        if (sizeof($errors) == 0) {
                             $updateResult = $Link->query("UPDATE user SET fullName = '$newFullName', birthDate = '$newBirthDate', gender = '$newGender', address = '$newAddress', phoneNumber = '$newPhoneNumber' WHERE id = '$userID'");
-                            if(!$updateResult) {
+                            if (!$updateResult) {
                                 setHTTPStatus("400", "DB error: $Link->error");
-                            }
-                            else {
+                            } else {
                                 setHTTPStatus("200", "Success");
                             }
                             break;
-                        }
-                        else {
+                        } else {
                             setHTTPStatus("400", $errors);
                         }
                 }
@@ -52,8 +52,7 @@ function profile($method, $requestData) {
                 setHTTPStatus("401", "Your token is not valid");
                 break;
         }
-    }
-    else {
+    } else {
         setHTTPStatus("400", "You can only send GET or PUT requests to 'profile'");
     }
 }

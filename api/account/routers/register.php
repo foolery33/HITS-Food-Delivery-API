@@ -65,9 +65,26 @@ function register($method, $requestData)
             $phoneNumber = $requestData->body->phoneNumber;
             $id = userId();
 
+            $errors = [];
+            if(strlen($email) == 0) {
+                $errors['Email'] = ["The Email field is required"];
+            }
+            if(strlen($fullName) == 0) {
+                $errors['FullName'] = ['The FullName field is required'];
+            }
+            if(strlen($requestData->body->password) == 0) {
+                $errors['Password'] = ['The Password field is required'];
+            }
+
+            if(sizeof($errors) != 0) {
+                setHTTPStatus("400", $errors);
+                return;
+            }
+
             $registerResult = registerValidation($email, $phoneNumber, $requestData->body->password);
 
             if ($registerResult == "true") {
+
                 $userInsertResult = $Link->query("INSERT INTO user(id, fullName, birthDate, gender, address, email, phoneNumber, password) VALUES ('$id', '$fullName', '$birthDate', '$gender', '$address', '$email', '$phoneNumber', '$password')");
 
                 if (!$userInsertResult) {

@@ -29,7 +29,7 @@ function isValidPassword($password)
 
     $message = "";
     for ($i = 0; $i < count($errors); $i++) {
-        $message .= $errors[$i] . ". ";
+        $message .= $errors[$i] . ".";
     }
 
     if(strlen($message) > 0) {
