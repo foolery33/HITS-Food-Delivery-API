@@ -11,6 +11,7 @@ function login($method, $requestData)
         $password = hash("sha1", $requestData->body->password);
 
         $user = $Link->query("SELECT id, fullName, birthDate, gender, address, email, phoneNumber FROM user WHERE email='$email' AND password='$password'")->fetch_assoc();
+
         if (!is_null($user)) {
             $token = generateUserToken($user);
             echo json_encode(['token' => $token]);

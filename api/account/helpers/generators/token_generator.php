@@ -24,13 +24,13 @@ function generateUserToken($user) {
         "aud" => $aud,
         "exp" => time() + 10000,
         "data" => array(
-            "id" => $user['id'],
             "fullName" => $user['fullName'],
             "birthDate" => $user['birthDate'],
             "gender" => $user['gender'],
             "address" => $user['address'],
             "email" => $user['email'],
-            "phoneNumber" => $user['phoneNumber']
+            "phoneNumber" => $user['phoneNumber'],
+            "id" => $user['id']
         )
     );
 

@@ -8,7 +8,9 @@ include_once 'helpers/get_request_method.php';
 include_once 'api/account/routers/register.php';
 include_once 'api/account/routers/login.php';
 include_once 'api/account/routers/logout.php';
+include_once 'api/account/routers/profile.php';
 include_once 'api/account/helpers/validation/general_validation.php';
+include_once 'helpers/check_token_expiration.php';
 
 global $Link;
 global $Key;
