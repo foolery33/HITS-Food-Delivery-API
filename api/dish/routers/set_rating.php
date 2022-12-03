@@ -9,6 +9,13 @@ function setDishRating($dishID, $requestData)
 {
 
     $rating = $requestData->parameters['ratingScore'][0];
+    if(!isset($rating)) {
+        if(sizeof($requestData->parameters)) {
+            setHTTPStatus("404", "Request /api/basket/dish/{dishId} accepts only 'ratingScore' as a parameter");
+            return;
+        }
+        $rating = 0;
+    }
 
     if (isset($rating) && is_numeric($rating) && (float)$rating == (int)$rating) {
         if($rating < 0 || $rating > 10) {

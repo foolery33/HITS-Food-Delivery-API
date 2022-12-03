@@ -17,6 +17,15 @@ function route($method, $urlList, $requestData)
             }
             break;
         case "DELETE":
+            if(sizeof($urlList) == 4) {
+                include_once "api/basket/routers/delete_dish_from_cart.php";
+                $dishID = $urlList[3];
+                deleteDishFromCart($dishID, $requestData);
+            }
+            else {
+                $endpoint = implode('/', $urlList);
+                setHTTPStatus("404", "You cannot sent DELETE request to such endpoint: '/$endpoint'");
+            }
             break;
     }
 }
