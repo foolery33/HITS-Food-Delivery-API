@@ -1,16 +1,16 @@
 <?php
 
-function getDishById($id)
+function getDishById($dishID)
 {
 
     global $Link;
 
-    $dish = $Link->query("SELECT * FROM dish WHERE dish_id = '$id'")->fetch_assoc();
+    $dish = $Link->query("SELECT * FROM dish WHERE dish_id = '$dishID'")->fetch_assoc();
     if ($dish) {
         include_once "api/dish/helpers/calculate_rating.php";
-        calculateRating($id);
+        calculateRating($dishID);
         echo json_encode($dish);
     } else {
-        setHTTPStatus("400", "Invalid dish ID");
+        setHTTPStatus("404", "There is no dish with such ID: '$dishID'");
     }
 }
