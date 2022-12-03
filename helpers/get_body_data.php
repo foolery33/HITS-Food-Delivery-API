@@ -10,9 +10,18 @@ function getBodyData($method): stdClass
     }
     $data->parameters = [];
     $dataGet = $_GET;
-    foreach ($dataGet as $key => $value) {
-        if ($key != "q") {
-            $data->parameters[$key] = $value;
+    $query = explode('&', $_SERVER['QUERY_STRING']);
+
+    foreach ($query as $parameter) {
+        if ($parameter[0] != "q") {
+            list($name, $value) = explode('=', $parameter, 2);
+            $data->parameters[urldecode($name)][] = urldecode($value);
+            /*if($data->parameters[$key] != "") {
+                $data->parameters[$key] .= ', ' . $key;
+            }
+            else {
+                $data->parameters[$key] = $value;
+            }*/
         }
     }
     return $data;

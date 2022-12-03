@@ -29,6 +29,7 @@ $urlList = explode('/', $url);
 $router = $urlList[0];
 $requestData = getBodyData(getRequestMethod());
 
+//echo $urlList;
 if (file_exists(realpath(dirname(__FILE__)) . '/' . $urlList[0] . '/' . $urlList[1] . '/router.php')) {
     include_once $urlList[0] . '/' . $urlList[1] . '/router.php';
     route(getRequestMethod(), $urlList, $requestData);

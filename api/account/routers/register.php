@@ -54,7 +54,7 @@ function register($method, $requestData)
     if ($method == "POST") {
         global $Link;
         $email = $requestData->body->email;
-        $user = $Link->query("SELECT id FROM user WHERE email='$email'")->fetch_assoc();
+        $user = $Link->query("SELECT user_id FROM user WHERE email='$email'")->fetch_assoc();
         if (is_null($user)) {
 
             $password = hash("sha1", $requestData->body->password);
@@ -85,12 +85,12 @@ function register($method, $requestData)
 
             if ($registerResult == "true") {
 
-                $userInsertResult = $Link->query("INSERT INTO user(id, fullName, birthDate, gender, address, email, phoneNumber, password) VALUES ('$id', '$fullName', '$birthDate', '$gender', '$address', '$email', '$phoneNumber', '$password')");
+                $userInsertResult = $Link->query("INSERT INTO user(user_id, fullName, birthDate, gender, address, email, phoneNumber, password) VALUES ('$id', '$fullName', '$birthDate', '$gender', '$address', '$email', '$phoneNumber', '$password')");
 
                 if (!$userInsertResult) {
                     setHTTPStatus("400", "DB error: $Link->error");
                 } else {
-                    $user = $Link->query("SELECT id, fullName, birthDate, gender, address, email, phoneNumber FROM user WHERE id = '$id'")->fetch_assoc();
+                    $user = $Link->query("SELECT user_id, fullName, birthDate, gender, address, email, phoneNumber FROM user WHERE user_id = '$id'")->fetch_assoc();
                     $token = generateUserToken($user);
                     echo json_encode(['token' => $token]);
                 }

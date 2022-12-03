@@ -30,7 +30,7 @@ function generateUserToken($user) {
             "address" => $user['address'],
             "email" => $user['email'],
             "phoneNumber" => $user['phoneNumber'],
-            "id" => $user['id']
+            "id" => $user['user_id']
         )
     );
 
