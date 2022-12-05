@@ -63,7 +63,7 @@ function register($method, $requestData)
             $birthDate = $requestData->body->birthDate;
             $gender = $requestData->body->gender;
             $phoneNumber = $requestData->body->phoneNumber;
-            $id = userId();
+            $id = generateID();
 
             $errors = [];
             if(strlen($email) == 0) {

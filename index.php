@@ -29,9 +29,13 @@ $urlList = explode('/', $url);
 $router = $urlList[0];
 $requestData = getBodyData(getRequestMethod());
 
-//echo $urlList;
-if (file_exists(realpath(dirname(__FILE__)) . '/' . $urlList[0] . '/' . $urlList[1] . '/router.php')) {
-    include_once $urlList[0] . '/' . $urlList[1] . '/router.php';
+if (file_exists(realpath(dirname(__FILE__)) . '/' . $urlList[0] . '/' . $urlList[1] . '/router.php') ||
+    file_exists(realpath(dirname(__FILE__)) . '/' . $urlList[0] . '/' . $urlList[1] . 's/router.php')) {
+    if ($urlList[1] == "order") {
+        include_once $urlList[0] . '/' . $urlList[1] . 's/router.php';
+    } else {
+        include_once $urlList[0] . '/' . $urlList[1] . '/router.php';
+    }
     route(getRequestMethod(), $urlList, $requestData);
 } else {
     setHTTPStatus("404", "Incorrect URL request");

@@ -1,6 +1,6 @@
 <?php
 
-function userId()
+function generateID()
 {
     mt_srand((double)microtime() * 1000000);
     $token = mt_rand(1, mt_getrandmax());

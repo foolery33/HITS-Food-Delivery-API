@@ -19,7 +19,7 @@ function showCartByDishIDs($dishesInCart)
             foreach ($dishesInCart as $value) {
                 $currentDishAmount = $Link->query("SELECT amount FROM dish_basket WHERE user_id = '$userID' AND dish_id = '$value[0]'")->fetch_assoc()['amount'];
                 $currentDish = $Link->query("SELECT name, price, image, dish_id FROM dish WHERE dish_id = '$value[0]'")->fetch_assoc();
-                $cart[sizeof($cart)] = array("name" => $currentDish['name'], "price" => (int)$currentDish['price'], "totalPrice" => (int)$currentDish['price'] * (int)$currentDishAmount, "amount" => (int)$currentDishAmount, "image" => $currentDish['image'], "id" => $value[0]);
+                $cart[sizeof($cart)] = array("name" => $currentDish['name'], "price" => (float)$currentDish['price'], "totalPrice" => (float)$currentDish['price'] * (int)$currentDishAmount, "amount" => (int)$currentDishAmount, "image" => $currentDish['image'], "id" => $value[0]);
             }
             echo json_encode($cart);
 

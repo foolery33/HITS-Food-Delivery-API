@@ -2,7 +2,6 @@
 
 function route($method, $urlList, $requestData)
 {
-
     switch ($method) {
         case "GET":
             if (sizeof($urlList) == 2) {
