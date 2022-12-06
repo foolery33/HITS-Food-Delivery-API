@@ -10,6 +10,10 @@ function route($method, $urlList, $requestData)
             }
             break;
         case "GET":
+            if (sizeof($urlList) == 2) {
+                include_once "api/orders/routers/get_order_list.php";
+                getOrderList();
+            }
             break;
         default:
             break;
