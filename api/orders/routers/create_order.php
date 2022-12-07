@@ -42,7 +42,7 @@ function createOrder($requestData)
                 if (isValidTimeFormat($deliveryTime)) {
                     if (timeToInt($currentTime) + 3600 < timeToInt($deliveryTime)) {
                         $orderPrice = getOrderPrice($dishesInCart);
-                        $insertResult = $Link->query("INSERT INTO orders(order_id, user_id, deliveryTime, orderTime, status, price) VALUES ('$orderID', '$userID', '$deliveryTime', '$currentTime','InProcess', '$orderPrice')");
+                        $insertResult = $Link->query("INSERT INTO orders(order_id, user_id, deliveryTime, orderTime, status, price, address) VALUES ('$orderID', '$userID', '$deliveryTime', '$currentTime','InProcess', '$orderPrice', '$address')");
                         if (!$insertResult) {
                             setHTTPStatus("500", "Database error: $Link->error");
                         } else {

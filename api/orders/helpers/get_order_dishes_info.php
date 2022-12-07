@@ -5,7 +5,7 @@ use Firebase\JWT\Key;
 
 require "libs/vendor/autoload.php";
 
-function showCartByDishIDs($dishesInCart)
+function getOrderDishesInfo($dishesInOrder, $orderID)
 {
     global $Link;
 
@@ -15,13 +15,13 @@ function showCartByDishIDs($dishesInCart)
         try {
             $decodedToken = (array)JWT::decode($token, new Key($Key, 'HS256'));
             $userID = $decodedToken['data']->id;
-            $cart = [];
-            foreach ($dishesInCart as $value) {
-                $currentDishAmount = $Link->query("SELECT amount FROM dish_basket WHERE user_id = '$userID' AND dish_id = '$value[0]' AND order_id IS NULL")->fetch_assoc()['amount'];
+            $order = [];
+            foreach ($dishesInOrder as $value) {
+                $currentDishAmount = $Link->query("SELECT amount FROM dish_basket WHERE user_id = '$userID' AND dish_id = '$value[0]' AND order_id = '$orderID'")->fetch_assoc()['amount'];
                 $currentDish = $Link->query("SELECT name, price, image, dish_id FROM dish WHERE dish_id = '$value[0]'")->fetch_assoc();
-                $cart[sizeof($cart)] = array("name" => $currentDish['name'], "price" => (float)$currentDish['price'], "totalPrice" => (float)$currentDish['price'] * (int)$currentDishAmount, "amount" => (int)$currentDishAmount, "image" => $currentDish['image'], "id" => $value[0]);
+                $order[sizeof($order)] = array("id" => $value[0], "name" => $currentDish['name'], "price" => (float)$currentDish['price'], "totalPrice" => (float)$currentDish['price'] * (int)$currentDishAmount, "amount" => (int)$currentDishAmount, "image" => $currentDish['image']);
             }
-            echo json_encode($cart);
+            return $order;
 
         } catch (Exception $e) {
             if ($e->getMessage() == "Expired token") {
@@ -29,9 +29,9 @@ function showCartByDishIDs($dishesInCart)
             } else {
                 setHTTPStatus("401", "Your token is not valid");
             }
+            return false;
         }
     } else {
         setHTTPStatus("401", "Your token is not valid");
     }
-
 }

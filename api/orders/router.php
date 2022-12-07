@@ -14,6 +14,10 @@ function route($method, $urlList, $requestData)
                 include_once "api/orders/routers/get_order_list.php";
                 getOrderList();
             }
+            elseif (sizeof($urlList) == 3) {
+                include_once "api/orders/routers/get_order_by_id.php";
+                getOrderById($urlList[2]);
+            }
             break;
         default:
             break;
