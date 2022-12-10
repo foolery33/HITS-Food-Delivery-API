@@ -4,7 +4,7 @@ use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 require "libs/vendor/autoload.php";
 
-function isExpiredToken($token)
+function isExpiredToken($token): bool
 {
     if ($token) {
         global $Key;
@@ -13,12 +13,14 @@ function isExpiredToken($token)
             return false;
         } catch (Exception $e) {
             if ($e->getMessage() == "Expired token") {
-                return "expired";
+                setHTTPStatus("401", "Your token is expired");
             } else {
-                return "invalid";
+                setHTTPStatus("401", "Your token is not valid");
             }
+            return true;
         }
     } else {
-        return "invalid";
+        setHTTPStatus("401", "Your token is not valid");
+        return true;
     }
 }
