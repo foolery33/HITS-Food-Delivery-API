@@ -8,7 +8,7 @@ require "libs/vendor/autoload.php";
 function changeProfile($requestData)
 {
     $token = substr(getallheaders()['Authorization'], 7);
-    if (isExpiredToken($token)) {
+    if(!isGoodToken($token)) {
         return;
     }
 

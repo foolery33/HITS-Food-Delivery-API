@@ -17,18 +17,21 @@ function setHTTPStatus($status = "200", $message = null)
         case "401":
             $status = "HTTP/1.0 401 Unauthorized";
             break;
+        case "403":
+            $status = "HTTP/1.0 403 Forbidden";
+            break;
         case "404":
-            $status = "HTTP/1.0 Not Found";
+            $status = "HTTP/1.0 404 Not Found";
             break;
         case "409":
-            $status = "HTTP/1.0 Conflict";
+            $status = "HTTP/1.0 409 Conflict";
             break;
         case "500":
-            $status = "HTTP/1.0 Internal Server Error";
+            $status = "HTTP/1.0 500 Internal Server Error";
             break;
     }
     header($status);
     if (!is_null($message)) {
-        echo json_encode(['message' => $message]);
+        echo json_encode(['errors' => $message]);
     }
 }

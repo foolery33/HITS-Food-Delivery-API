@@ -2,38 +2,45 @@
 
 function route($method, $urlList, $requestData)
 {
+
+    $endpoint = '/' . implode('/', $urlList);
+
     switch ($method) {
-        case "POST":
-            if (sizeof($urlList) == 2) {
-                include_once "api/order_handler/routers/create_order.php";
-                createOrder($requestData);
-            }
-            elseif (sizeof($urlList) == 4) {
-                include_once "api/order_handler/routers/confirm_order_delivery.php";
-                confirmOrderDelivery($urlList[2]);
-            }
-            else {
-                $endpoint = implode('/', $urlList);
-                setHTTPStatus("404", "You cannot send POST request to '/$endpoint'");
-            }
-            break;
+
         case "GET":
-            if (sizeof($urlList) == 2) {
-                include_once "api/order_handler/routers/get_order_list.php";
-                getOrderList();
-            }
-            elseif (sizeof($urlList) == 3) {
-                include_once "api/order_handler/routers/get_order_by_id.php";
-                getOrderById($urlList[2]);
-            }
-            else {
-                $endpoint = implode('/', $urlList);
-                setHTTPStatus("404", "You cannot send GET request to '/$endpoint'");
+            switch ($endpoint) {
+                case "/api/order":
+                    include_once "api/order_handler/routers/get_order_list.php";
+                    getOrderList();
+                    break;
+                case "/api/order/$urlList[2]":
+                    include_once "api/order_handler/routers/get_order_by_id.php";
+                    getOrderById($urlList[2]);
+                    break;
+                default:
+                    setHTTPStatus("404", "There is no such endpoint as: '$endpoint' with $method type of request");
+                    break;
             }
             break;
+
+        case "POST":
+            switch ($endpoint) {
+                case "/api/order":
+                    include_once "api/order_handler/routers/create_order.php";
+                    createOrder($requestData);
+                    break;
+                case "/api/order/$urlList[2]/status":
+                    include_once "api/order_handler/routers/confirm_order_delivery.php";
+                    confirmOrderDelivery($urlList[2]);
+                    break;
+                default:
+                    setHTTPStatus("404", "There is no such endpoint as: '$endpoint' with $method type of request");
+                    break;
+            }
+            break;
+
         default:
-            $endpoint = implode('/', $urlList);
-            setHTTPStatus("404", "You cannot send $method request to '/$endpoint'");
+            setHTTPStatus("404", "There is no such endpoint as: '$endpoint' with $method type of request");
             break;
     }
 }

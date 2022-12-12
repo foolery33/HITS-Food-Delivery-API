@@ -13,60 +13,55 @@ include_once "api/order_handler/helpers/insert_order_id.php";
 
 function createOrder($requestData)
 {
-    global $Link;
     $token = substr(getallheaders()['Authorization'], 7);
-
-    $deliveryTime = $requestData->body->deliveryTime;
-    $address = $requestData->body->address;
-    if (!isset($deliveryTime) && !isset($address)) {
-        setHTTPStatus("400", array("deliveryTime" => "'deliveryTime' field is required", "address" => "'address' field is required"));
-        return;
-    } elseif (!isset($deliveryTime)) {
-        setHTTPStatus("400", "'deliveryTime' field is required");
-        return;
-    } elseif (!isset($address)) {
-        setHTTPStatus("400", "'address' field is required");
+    if (!isGoodToken($token)) {
         return;
     }
 
-    if ($token) {
-        global $Key;
-        try {
-            $decodedToken = (array)JWT::decode($token, new Key($Key, 'HS256'));
-            $userID = $decodedToken['data']->id;
-            /* Проверяем, пуста ли корзина */
-            $dishesInCart = $Link->query("SELECT dish_id, amount FROM dish_basket WHERE user_id = '$userID' AND order_id IS NULL")->fetch_all();
-            // Корзина не пуста
-            if ($dishesInCart) {
-                // Создаём новый заказ
-                $orderID = generateID();
-                $currentTime = getCurrentDateAndTime();
-                if (isValidTimeFormat($deliveryTime)) {
-                    if (timeToInt($currentTime) + 3600 < timeToInt($deliveryTime)) {
-                        $orderPrice = getOrderPrice($dishesInCart);
-                        $insertResult = $Link->query("INSERT INTO orders(order_id, user_id, deliveryTime, orderTime, status, price, address) VALUES ('$orderID', '$userID', '$deliveryTime', '$currentTime','InProcess', '$orderPrice', '$address')");
-                        if (!$insertResult) {
-                            setHTTPStatus("500", "Database error: $Link->error");
-                        } else {
-                            insertOrderID($orderID, $userID, $dishesInCart);
-                        }
-                    } else {
-                        setHTTPStatus("400", "Invalid delivery time. Delivery time must be more than current datetime on 60 minutes");
-                    }
+    global $Link;
+    global $Key;
+
+    $deliveryTime = $requestData->body->deliveryTime;
+    $address = $requestData->body->address;
+
+    $errors = [];
+    if(strlen($address) == 0) {
+        $errors['Address'] = ['The Address field is required'];
+    }
+    if(sizeof($errors) != 0) {
+        setHTTPStatus("400", $errors);
+        return;
+    }
+    if(strlen($deliveryTime) == 0) {
+        setHTTPStatus("400", "The added or subtracted value results in an un-representable DateTime. (Parameter 'value')");
+        return;
+    }
+
+    $decodedToken = (array)JWT::decode($token, new Key($Key, 'HS256'));
+    $userID = $decodedToken['data']->id;
+    /* Проверяем, пуста ли корзина */
+    $dishesInCart = $Link->query("SELECT dish_id, amount FROM dish_basket WHERE user_id = '$userID' AND order_id IS NULL")->fetch_all();
+    // Корзина не пуста
+    if ($dishesInCart) {
+        // Создаём новый заказ
+        $orderID = generateID();
+        $currentTime = getCurrentDateAndTime();
+        if (isValidTimeFormat($deliveryTime)) {
+            if (timeToInt($currentTime) + 3600 < timeToInt($deliveryTime)) {
+                $orderPrice = getOrderPrice($dishesInCart);
+                $insertResult = $Link->query("INSERT INTO orders(order_id, user_id, deliveryTime, orderTime, status, price, address) VALUES ('$orderID', '$userID', '$deliveryTime', '$currentTime','InProcess', '$orderPrice', '$address')");
+                if (!$insertResult) {
+                    setHTTPStatus("500", "Database error: $Link->error");
                 } else {
-                    setHTTPStatus("400", "Provided 'deliveryTime' data doesn't match to required format");
+                    insertOrderID($orderID, $userID, $dishesInCart);
                 }
             } else {
-                setHTTPStatus("400", "Empty basket for user with id=$userID");
+                setHTTPStatus("400", "Invalid delivery time. Delivery time must be more than current datetime on 60 minutes");
             }
-        } catch (Exception $e) {
-            if ($e->getMessage() == "Expired token") {
-                setHTTPStatus("401", "Your token is expired");
-            } else {
-                setHTTPStatus("401", "Your token is not valid");
-            }
+        } else {
+            setHTTPStatus("400", "Provided 'deliveryTime' data doesn't match to required format");
         }
     } else {
-        setHTTPStatus("401", "Your token is not valid");
+        setHTTPStatus("400", "Empty basket for user with id=$userID");
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+include_once "helpers/check_token_expiration.php";
+
 /**
  * @throws Exception
  */
@@ -22,10 +24,10 @@ function route($method, $urlList, $requestData)
                     break;
                 case "/api/account/logout":
                     include_once 'api/account_handler/routers/logout.php';
-                    logout($requestData);
+                    logout();
                     break;
                 default:
-                    setHTTPStatus("404", "There is no such endpoint as: '$endpoint'");
+                    setHTTPStatus("404", "There is no such endpoint as: '$endpoint' with $method type of request");
                     break;
             }
             break;
@@ -37,7 +39,7 @@ function route($method, $urlList, $requestData)
                     getProfile($requestData);
                     break;
                 default:
-                    setHTTPStatus("404", "There is no such endpoint as: '$endpoint'");
+                    setHTTPStatus("404", "There is no such endpoint as: '$endpoint' with $method type of request");
                     break;
             }
             break;
@@ -49,13 +51,13 @@ function route($method, $urlList, $requestData)
                     changeProfile($requestData);
                     break;
                 default:
-                    setHTTPStatus("404", "There is no such endpoint as: '$endpoint'");
+                    setHTTPStatus("404", "There is no such endpoint as: '$endpoint' with $method type of request");
                     break;
             }
             break;
 
         default:
-            setHTTPStatus("404", "There is no such endpoint as: '$endpoint'");
+            setHTTPStatus("404", "There is no such endpoint as: '$endpoint' with $method type of request");
             break;
     }
 

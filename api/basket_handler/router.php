@@ -2,38 +2,49 @@
 
 function route($method, $urlList, $requestData)
 {
+
+    $endpoint = '/' . implode('/', $urlList);
+
     switch ($method) {
+
         case "GET":
-            if (sizeof($urlList) == 2) {
-                include_once "api/basket_handler/routers/get_user_cart.php";
-                getUserCart();
-            } else {
-                $endpoint = implode('/', $urlList);
-                setHTTPStatus("404", "You cannot send GET request to such endpoint: '/$endpoint'");
+            switch ($endpoint) {
+                case "/api/basket":
+                    include_once "api/basket_handler/routers/get_user_cart.php";
+                    getUserCart();
+                    break;
+                default:
+                    setHTTPStatus("404", "There is no such endpoint as: '$endpoint' with $method type of request");
+                    break;
             }
             break;
+
         case "POST":
-            if (sizeof($urlList) == 4) {
-                include_once "api/basket_handler/routers/add_dish_to_cart.php";
-                $dishID = $urlList[3];
-                addDishToCart($dishID);
-            } else {
-                $endpoint = implode('/', $urlList);
-                setHTTPStatus("404", "You cannot send POST request to such endpoint: '/$endpoint'");
+            switch ($endpoint) {
+                case "/api/basket/dish/$urlList[3]":
+                    include_once "api/basket_handler/routers/add_dish_to_cart.php";
+                    addDishToCart($urlList[3]);
+                    break;
+                default:
+                    setHTTPStatus("404", "There is no such endpoint as: '$endpoint' with $method type of request");
+                    break;
             }
             break;
+
         case "DELETE":
-            if (sizeof($urlList) == 4) {
-                include_once "api/basket_handler/routers/delete_dish_from_cart.php";
-                $dishID = $urlList[3];
-                deleteDishFromCart($dishID, $requestData);
-            } else {
-                $endpoint = implode('/', $urlList);
-                setHTTPStatus("404", "You cannot send DELETE request to such endpoint: '/$endpoint'");
+            switch ($endpoint) {
+                case "/api/basket/dish/$urlList[3]":
+                    include_once "api/basket_handler/routers/delete_dish_from_cart.php";
+                    deleteDishFromCart($urlList[3], $requestData);
+                    break;
+                default:
+                    setHTTPStatus("404", "There is no such endpoint as: '$endpoint' with $method type of request");
+                    break;
             }
             break;
+
         default:
-            $endpoint = implode('/', $urlList);
-            setHTTPStatus("404", "You cannot send $method request to such endpoint: '/$endpoint");
+            setHTTPStatus("404", "There is no such endpoint as: '$endpoint' with $method type of request");
+            break;
     }
 }
