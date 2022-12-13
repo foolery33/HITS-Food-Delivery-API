@@ -8,9 +8,11 @@ function getBodyData($method): stdClass
     if ($method != "GET") {
         $data->body = json_decode(file_get_contents('php://input'));
         if($data->body == null) {
-            $jsonError = json_last_error_msg();
-            setHTTPStatus("400", "Not valid JSON string: $jsonError");
-            die;
+            if(strlen(file_get_contents('php://input')) > 0) {
+                $jsonError = json_last_error_msg();
+                setHTTPStatus("400", "Not valid JSON string: $jsonError");
+                die;
+            }
         }
     }
     $data->parameters = [];

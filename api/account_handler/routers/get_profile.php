@@ -4,7 +4,7 @@ use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 require "libs/vendor/autoload.php";
 
-function getProfile($requestData)
+function getProfile()
 {
     $token = substr(getallheaders()['Authorization'], 7);
     if(!isGoodToken($token)) {

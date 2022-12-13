@@ -5,10 +5,14 @@ use Firebase\JWT\Key;
 
 require "libs/vendor/autoload.php";
 
+/*
+ * Функция, изменяющая в базе данных информацию о пользователе
+ */
+
 function changeProfile($requestData)
 {
     $token = substr(getallheaders()['Authorization'], 7);
-    if(!isGoodToken($token)) {
+    if (!isGoodToken($token)) {
         return;
     }
 

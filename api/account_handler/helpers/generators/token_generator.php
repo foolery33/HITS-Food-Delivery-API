@@ -4,9 +4,15 @@ include_once "libs/vendor/firebase/php-jwt/src/BeforeValidException.php";
 include_once "libs/vendor/firebase/php-jwt/src/ExpiredException.php";
 include_once "libs/vendor/firebase/php-jwt/src/SignatureInvalidException.php";
 include_once "libs/vendor/firebase/php-jwt/src/JWT.php";
+
 use Firebase\JWT\JWT;
 
-function generateUserToken($user) {
+/*
+ * Функция, позволяющая сгенерировать JWT-Token, который выдаётся пользователю при регистрации и авторизации
+ */
+
+function generateUserToken($user): string
+{
 
     global $Key;
     // Показ сообщений об ошибках

@@ -36,7 +36,7 @@ function route($method, $urlList, $requestData)
             switch ($endpoint) {
                 case "/api/account/profile":
                     include_once 'api/account_handler/routers/get_profile.php';
-                    getProfile($requestData);
+                    getProfile();
                     break;
                 default:
                     setHTTPStatus("404", "There is no such endpoint as: '$endpoint' with $method type of request");

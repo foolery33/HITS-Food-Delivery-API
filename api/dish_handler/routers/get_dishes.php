@@ -19,7 +19,7 @@ function getDishes($requestData)
         if (sizeof($categories) > 1) {
             $categoriesQuery .= "(";
         }
-        foreach ($categories as $key => $value) {
+        foreach ($categories as $value) {
             if (in_array($value, array("Wok", "Pizza", "Soup", "Dessert", "Drink"))) {
                 $categoriesQuery .= "category = '$value' OR ";
             } else {
@@ -75,8 +75,8 @@ function getDishes($requestData)
         $sortingQuery = "name ASC";
     }
     if (isset($page)) {
-        if (sizeof($page) != 1 || !is_numeric($page[0])) {
-            setHTTPStatus("400", "Parameter 'page' should be singular numeric value");
+        if (sizeof($page) != 1 || !is_numeric($page[0]) || $page[0] < 1) {
+            setHTTPStatus("400", "Parameter 'page' should be singular numeric value above 0");
             return;
         } else {
             $pageQuery = $dishesOnPage * ((int)$page[0] - 1);
