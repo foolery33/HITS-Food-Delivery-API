@@ -52,6 +52,6 @@ function register($requestData)
         }
 
     } else {
-        setHTTPStatus("409", "User with email '$email' already exists");
+        setHTTPStatus("400", "User with email '$email' already exists");
     }
 }

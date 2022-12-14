@@ -7,8 +7,10 @@ function getDishById($dishID)
 
     $dish = $Link->query("SELECT * FROM dish WHERE dish_id = '$dishID'")->fetch_assoc();
     if ($dish) {
-        include_once "api/dish_handler/helpers/calculate_rating.php";
-        calculateRating($dishID);
+        $dishQuery = "SELECT * FROM dish WHERE dish_id = '$dishID'";
+        include_once "api/dish_handler/helpers/update_ratings.php";
+        updateRatings($dishQuery);
+        $dish = $Link->query("SELECT * FROM dish WHERE dish_id = '$dishID'")->fetch_assoc();
         $dishData = array(
             "id" => $dish['dish_id'],
             "name" => $dish['name'],

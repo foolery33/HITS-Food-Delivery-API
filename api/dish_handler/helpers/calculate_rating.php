@@ -1,6 +1,6 @@
 <?php
 
-function calculateRating($dishID)
+function calculateRating($dishID): ?float
 {
     global $Link;
     $sumOfRatings = 0;

@@ -20,7 +20,7 @@ function getOrderById($orderID)
     // Проверка на то, что пользователь не пытается посмотреть информацию о чужом заказе
     $order = $Link->query("SELECT order_id, deliveryTime, orderTime, status, price, address FROM orders WHERE order_id = '$orderID' AND user_id != '$userID'")->fetch_assoc();
     if(isset($order)) {
-        setHTTPStatus("403", "You try to receive data about order which is made by another user");
+        setHTTPStatus("403", "You try to receive data about order which was made by another user");
         return;
     }
 

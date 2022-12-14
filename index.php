@@ -6,7 +6,7 @@ include_once 'api/account_handler/helpers/generators/token_generator.php';
 include_once 'helpers/get_body_data.php';
 include_once 'helpers/get_request_method.php';
 include_once 'api/account_handler/helpers/validation/general_validation.php';
-include_once 'helpers/check_token_expiration.php';
+include_once 'helpers/is_good_token.php';
 
 global $Link;
 global $Key;

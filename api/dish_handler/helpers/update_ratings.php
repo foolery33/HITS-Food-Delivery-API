@@ -1,6 +1,6 @@
 <?php
 
-function insert_ratings($query) {
+function updateRatings($query) {
 
     include_once "api/dish_handler/helpers/calculate_rating.php";
 

@@ -13,7 +13,7 @@ function isGoodToken($token): bool
             global $Link;
             $searchResult = $Link->query("SELECT * FROM token_blacklist WHERE token = '$token'")->fetch_assoc();
             if ($searchResult) {
-                setHTTPStatus("403", "User with provided token has already been logged out");
+                setHTTPStatus("401", "User with provided token has already been logged out");
                 return false;
             }
             $decode = JWT::decode($token, new Key($Key, 'HS256'));

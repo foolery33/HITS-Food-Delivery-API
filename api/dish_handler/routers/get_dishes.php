@@ -82,11 +82,12 @@ function getDishes($requestData)
             $pageQuery = $dishesOnPage * ((int)$page[0] - 1);
         }
     } else {
+        $page[0] = 1;
         $pageQuery = 0;
     }
     $query = "SELECT * FROM dish WHERE $categoriesQuery AND $vegetarianQuery ORDER BY $sortingQuery LIMIT $dishesOnPage OFFSET $pageQuery";
-    include_once "api/dish_handler/helpers/insert_ratings.php";
-    insert_ratings($query);
+    include_once "api/dish_handler/helpers/update_ratings.php";
+    updateRatings($query);
     $dishes = $Link->query($query)->fetch_all();
     if (sizeof($dishes) == 0) {
         setHTTPStatus("400", "Invalid value for attribute page");

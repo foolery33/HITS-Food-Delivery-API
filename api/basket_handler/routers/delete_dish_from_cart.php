@@ -17,8 +17,15 @@ function deleteDishFromCart($dishID, $requestData)
 
     $decodedToken = (array)JWT::decode($token, new Key($Key, 'HS256'));
     $userID = $decodedToken['data']->id;
-    $dish = $Link->query("SELECT * FROM dish WHERE dish_id = '$dishID'");
+    $dish = $Link->query("SELECT * FROM dish WHERE dish_id = '$dishID'")->fetch_assoc();
     if ($dish) {
+
+        $dishInCart = $Link->query("SELECT * FROM dish_basket WHERE dish_id = '$dishID' AND user_id = '$userID'")->fetch_assoc();
+        if(!isset($dishInCart)) {
+            setHTTPStatus("404", "Dish with id = '$dishID' is not in your basket");
+            return;
+        }
+
         $increase = $requestData->parameters['increase'][0] ?? false;
         switch ($increase) {
             case "true":
@@ -54,5 +61,8 @@ function deleteDishFromCart($dishID, $requestData)
                 setHTTPStatus("500", "Database error: $Link->error");
             }
         }
+    }
+    else {
+        setHTTPStatus("404", "There is no dish with such id: $dishID");
     }
 }

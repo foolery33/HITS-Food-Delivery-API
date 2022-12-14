@@ -25,15 +25,14 @@ function createOrder($requestData)
     $address = $requestData->body->address;
 
     $errors = [];
+    if(strlen($deliveryTime) == 0) {
+        $errors['DeliveryTime'] = ['The DeliveryTime field is required'];
+    }
     if(strlen($address) == 0) {
         $errors['Address'] = ['The Address field is required'];
     }
     if(sizeof($errors) != 0) {
         setHTTPStatus("400", $errors);
-        return;
-    }
-    if(strlen($deliveryTime) == 0) {
-        setHTTPStatus("400", "The added or subtracted value results in an un-representable DateTime. (Parameter 'value')");
         return;
     }
 
@@ -62,6 +61,6 @@ function createOrder($requestData)
             setHTTPStatus("400", "Provided 'deliveryTime' data doesn't match to required format");
         }
     } else {
-        setHTTPStatus("400", "Empty basket for user with id=$userID");
+        setHTTPStatus("400", "Empty basket for user with id = '$userID'");
     }
 }

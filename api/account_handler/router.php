@@ -1,6 +1,6 @@
 <?php
 
-include_once "helpers/check_token_expiration.php";
+include_once "helpers/is_good_token.php";
 
 /**
  * @throws Exception

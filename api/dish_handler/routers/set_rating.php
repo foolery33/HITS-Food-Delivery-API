@@ -30,7 +30,7 @@ function setDishRating($dishID, $requestData)
 
             $decodedToken = (array)JWT::decode($token, new Key($Key, 'HS256'));
             $userID = $decodedToken['data']->id;
-            $dish = $Link->query("SELECT * FROM dish WHERE dish_id = '$dishID'");
+            $dish = $Link->query("SELECT * FROM dish WHERE dish_id = '$dishID'")->fetch_assoc();
             if (isset($dish)) {
                 include_once "api/dish_handler/helpers/was_ordered_dish.php";
                 if (wasOrderedDish($dishID, $userID)) {

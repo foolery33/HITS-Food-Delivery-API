@@ -27,7 +27,7 @@ function login($requestData)
         $token = generateUserToken($user);
         echo json_encode(['token' => $token]);
     } else {
-        setHTTPStatus("404", "There is no such user with supplied data");
+        setHTTPStatus("400", "There is no such user with supplied data");
     }
 
 }
