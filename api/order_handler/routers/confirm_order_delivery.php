@@ -28,6 +28,10 @@ function confirmOrderDelivery($orderID)
     // Пользователь подтверждает свой заказ
     $order = $Link->query("SELECT * FROM orders WHERE order_id = '$orderID' AND user_id = '$userID'")->fetch_assoc();
     if (isset($order)) {
+        if($order['status'] == "Delivered") {
+            setHTTPStatus("400", "Can't update status for order with id = '$orderID'");
+            return;
+        }
         $updateResult = $Link->query("UPDATE orders SET status = 'Delivered' WHERE order_id = '$orderID' AND user_id = '$userID'");
         if (!$updateResult) {
             setHTTPStatus("500", "Database error: $Link->error");
