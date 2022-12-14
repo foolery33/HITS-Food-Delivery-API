@@ -2,6 +2,7 @@
 
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+include_once "api/dish_handler/helpers/update_ratings.php";
 
 require "libs/vendor/autoload.php";
 
@@ -40,10 +41,16 @@ function setDishRating($dishID, $requestData)
                         if (!$updateResult) {
                             setHTTPStatus("500", "Database error: $Link->error");
                         }
+                        else {
+                            updateRating($dishID);
+                        }
                     } else {
                         $insertResult = $Link->query("INSERT INTO rating(user_id, dish_id, rating) VALUES ('$userID', '$dishID', '$rating')");
                         if (!$insertResult) {
                             setHTTPStatus("500", "Database error: $Link->error");
+                        }
+                        else {
+                            updateRating($dishID);
                         }
                     }
                 } else {

@@ -93,8 +93,6 @@ function getDishes($requestData)
         $pageQuery = 0;
     }
     $query = "SELECT * FROM dish WHERE $categoriesQuery AND $vegetarianQuery ORDER BY $sortingQuery LIMIT $dishesOnPage OFFSET $pageQuery";
-    include_once "api/dish_handler/helpers/update_ratings.php";
-    updateRatings($query);
     $dishes = $Link->query($query)->fetch_all();
     if (sizeof($dishes) == 0) {
         setHTTPStatus("400", "Invalid value for attribute page");
