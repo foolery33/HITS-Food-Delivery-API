@@ -20,7 +20,7 @@ function deleteDishFromCart($dishID, $requestData)
     $dish = $Link->query("SELECT * FROM dish WHERE dish_id = '$dishID'")->fetch_assoc();
     if ($dish) {
 
-        $dishInCart = $Link->query("SELECT * FROM dish_basket WHERE dish_id = '$dishID' AND user_id = '$userID'")->fetch_assoc();
+        $dishInCart = $Link->query("SELECT * FROM dish_basket WHERE dish_id = '$dishID' AND user_id = '$userID' AND order_id IS NULL")->fetch_assoc();
         if(!isset($dishInCart)) {
             setHTTPStatus("404", "Dish with id = '$dishID' is not in your basket");
             return;
@@ -40,7 +40,7 @@ function deleteDishFromCart($dishID, $requestData)
                 return;
         }
 
-        $dishAmountInCart = (int)$Link->query("SELECT amount FROM dish_basket WHERE dish_id = '$dishID' AND user_id = '$userID'")->fetch_assoc()['amount'];
+        $dishAmountInCart = (int)$Link->query("SELECT amount FROM dish_basket WHERE dish_id = '$dishID' AND user_id = '$userID' AND order_id IS NULL")->fetch_assoc()['amount'];
         // Смотрим флаг increase:
         if ($increase) {
             if ($dishAmountInCart == 1) {

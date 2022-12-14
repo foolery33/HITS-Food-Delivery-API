@@ -22,7 +22,6 @@ $url = $_GET['q'] ?? '';
 $url = rtrim($url, '/');
 $urlList = explode('/', $url);
 
-$router = $urlList[0];
 $requestData = getBodyData(getRequestMethod());
 
 if (file_exists(realpath(dirname(__FILE__)) . '/' . $urlList[0] . '/' . $urlList[1] . '_handler/router.php')) {

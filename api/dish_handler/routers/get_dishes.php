@@ -15,6 +15,13 @@ function getDishes($requestData)
     $vegetarianQuery = "";
     $sortingQuery = "";
     $pageQuery = ""; // OFFSET в запросе
+
+    // Проверка на то, что нет лишних введенных параметров
+    include_once "api/dish_handler/helpers/check_dish_parameters_accuracy.php";
+    if(!areAccurateDishesParameters($requestData->parameters, array("categories", "page", "vegetarian", "sorting"))) {
+        return;
+    }
+
     if (isset($categories)) {
         if (sizeof($categories) > 1) {
             $categoriesQuery .= "(";

@@ -33,5 +33,6 @@ function getOrderDishesInfo($dishesInOrder, $orderID)
         }
     } else {
         setHTTPStatus("401", "Your token is not valid");
+        return false;
     }
 }

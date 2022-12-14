@@ -53,5 +53,7 @@ function setDishRating($dishID, $requestData)
                 setHTTPStatus("404", "There is no dish with such ID: '$dishID'");
             }
         }
+    } else {
+        setHTTPStatus("400", "Rating should be integer value in range from 0 to 10");
     }
 }
