@@ -32,6 +32,19 @@ function changeProfile($requestData)
     }
 
     $newBirthDate = empty($requestData->body->birthDate) ? $user->birthDate : $requestData->body->birthDate;
+    if (isset($newBirthDate)) {
+        include_once "helpers/valid_time_format.php";
+        include_once "helpers/time_to_int.php";
+        if (isValidTimeFormat($newBirthDate)) {
+            if(timeToInt($newBirthDate) > time()) {
+                $errors['BirthDate'] = ['Birth date can\'t be later that current time moment'];
+            }
+        } else {
+            setHTTPStatus("400", "Provided 'birthDate' data doesn't match to required format");
+            return;
+        }
+    }
+
     $newAddress = empty($requestData->body->address) ? $user->address : $requestData->body->address;
     $newPhoneNumber = empty($requestData->body->phoneNumber) ? $user->phoneNumber : $requestData->body->phoneNumber;
 

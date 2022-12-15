@@ -22,6 +22,7 @@ function registerValidation($email, $phoneNumber, $password, $birthDate)
     if ($passwordMessage != "true") {
         $message['Password'] = explode('.', $passwordMessage);
     }
+
     if (isset($birthDate)) {
         include_once "helpers/valid_time_format.php";
         include_once "helpers/time_to_int.php";
@@ -30,7 +31,7 @@ function registerValidation($email, $phoneNumber, $password, $birthDate)
                 $message['BirthDate'] = ['Birth date can\'t be later that current time moment'];
             }
         } else {
-            setHTTPStatus("400", "Provided 'deliveryTime' data doesn't match to required format");
+            setHTTPStatus("400", "Provided 'birthDate' data doesn't match to required format");
         }
     }
 
