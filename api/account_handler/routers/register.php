@@ -34,7 +34,7 @@ function register($requestData)
             return;
         }
 
-        $registerResult = registerValidation($email, $phoneNumber, $requestData->body->password);
+        $registerResult = registerValidation($email, $phoneNumber, $requestData->body->password, $birthDate);
 
         if ($registerResult == "true") {
 
